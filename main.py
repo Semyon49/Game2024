@@ -12,14 +12,15 @@ buttom = tk.Button(root, text='START', width=60, height=25, bg='orange', command
 buttom.pack(anchor='center')
 if run:
     root.mainloop()
-    
+
+
 class Player:
 
     def __init__(self, x, y):
         self.x = x
         self.y = y
         self.hp = 5
-        self.center = (x + 75 / 2, y + 75 / 2)
+        
 
     def move(self, key):
         global cells
@@ -42,9 +43,8 @@ class Player:
                     self.x += 1
 
     def draw(self):
-        player_img = pg.image.load('Игрок_1.png')
-        player_rect = player_img.get_rect(center = (self.center[0]-15, self.center[1]-15))
-        win.blit(player_img, player_rect)
+        global cells
+        pg.draw.rect(win, (255, 0, 0), (cells[self.y][self.x].x, cells[self.y][self.x].y, 75, 75))
 
 
 class Cell:
@@ -93,11 +93,12 @@ pg.font.init()
 textF = pg.font.Font('carbonara(FONT BY LYAJKA).ttf', 45)
 text = textF.render(string_score, False, 'black')
 
+
 def change_text():
     string_score = 'Счёт: ' + str(score)
     text = textF.render(string_score, False, 'black')
 
-    
+
 # ---------- Изображения ------- #
 
 # list_image = [pg.image.load('image/Песок_75х75.png'), pg.image.load('image/Вода_75х75(3).png'), pg.image.load('image/Кувшинка_большая.png'), pg.image.load('image/Кувшинка_маленькая.png')]
