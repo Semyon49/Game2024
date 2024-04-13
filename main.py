@@ -52,7 +52,7 @@ class Cell:
         elif self.type == 2:
             cell_img = pg.image.load('Ресурс 30.png')
         elif self.type == 3:
-            cell_img = pg.image.load('Ресунок 32.png')
+            cell_img = pg.image.load('Ресурс 32.png')
         cell_rect = cell_img.get_rect(center=self.center)
         win.blit(cell_img, cell_rect)
 
@@ -76,7 +76,7 @@ win = pg.display.set_mode((750, 790))
 score = 0
 string_score = 'Счёт: ' + str(score)
 pg.font.init()
-textF = pg.font.Font('carbonara(FONT BY LYAJKA)', 45)
+textF = pg.font.Font('carbonara(FONT BY LYAJKA).ttf', 45)
 text = textF.render(string_score, False, 'black')
 
 # ---------- Изображения ------- #
