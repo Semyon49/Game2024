@@ -8,9 +8,12 @@
 - Библиотека PyGame
 - Библиотека sys
 - Библиотека functools
-- Библиотека random 
+- Библиотека random
+- Библиотека tkinter 
+  
 
 ### Установить библиотеки можно с помощью менеджера пакетов pip:
 ```
 pip install PyGame
+pip install tkinter
 ```
