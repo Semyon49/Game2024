@@ -20,7 +20,6 @@ class Player:
         self.x = x
         self.y = y
         self.hp = 5
-        
 
     def move(self, key):
         global cells
