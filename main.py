@@ -2,34 +2,49 @@ import pygame as pg
 import sys
 from random import randint
 from functools import *
+import tkinter as tk
 
+root = tk.Tk()
+run = 1
+root.geometry('1053x800')
 
+buttom = tk.Button(root, text='START', width=60, height=25, bg='orange', command=lambda: root.destroy())
+buttom.pack(anchor='center')
+if run:
+    root.mainloop()
+    
 class Player:
 
     def __init__(self, x, y):
         self.x = x
         self.y = y
         self.hp = 5
+        self.center = (x + 75 / 2, y + 75 / 2)
 
     def move(self, key):
         global cells
 
         if key == 'w':
-            if cells[self.y - 1][self.x].type in [1, 2, 3]:
-                self.y -= 1
+            if player.y > 0:
+                if cells[self.y - 1][self.x].type in [1, 2, 3]:
+                    self.y -= 1
         elif key == 's':
-            if cells[self.y + 1][self.x].type in [1, 2, 3]:
-                self.y += 1
+            if player.y < 9:
+                if cells[self.y + 1][self.x].type in [1, 2, 3]:
+                    self.y += 1
         elif key == 'a':
-            if cells[self.y][self.x - 1].type in [1, 2, 3]:
-                self.x -= 1
+            if player.x > 0:
+                if cells[self.y][self.x - 1].type in [1, 2, 3]:
+                    self.x -= 1
         elif key == 'd':
-            if cells[self.y][self.x + 1].type in [1, 2, 3]:
-                self.x += 1
+            if player.x < 9:
+                if cells[self.y][self.x + 1].type in [1, 2, 3]:
+                    self.x += 1
 
     def draw(self):
-        global cells
-        pg.draw.rect(win, (255, 0, 0), (cells[self.y][self.x].x + 5, cells[self.y][self.x].y + 5, 65, 65))
+        player_img = pg.image.load('Игрок_1.png')
+        player_rect = player_img.get_rect(center = (self.center[0]-15, self.center[1]-15))
+        win.blit(player_img, player_rect)
 
 
 class Cell:
@@ -43,16 +58,15 @@ class Cell:
         self.center = (x + 75 / 2, y + 75 / 2)
 
     def draw(self):
-        color = (255, 255, 255)
         cell_img = None
         if self.type == 0:
             cell_img = pg.image.load('Вода_75х75(3).png')
         elif self.type == 1:
             cell_img = pg.image.load('Песок_75х75.png')
         elif self.type == 2:
-            cell_img = pg.image.load('Ресурс 30.png')
+            cell_img = pg.image.load('Ресурс 37.png')
         elif self.type == 3:
-            cell_img = pg.image.load('Ресурс 32.png')
+            cell_img = pg.image.load('Ресурс 38.png')
         cell_rect = cell_img.get_rect(center=self.center)
         win.blit(cell_img, cell_rect)
 
@@ -79,6 +93,11 @@ pg.font.init()
 textF = pg.font.Font('carbonara(FONT BY LYAJKA).ttf', 45)
 text = textF.render(string_score, False, 'black')
 
+def change_text():
+    string_score = 'Счёт: ' + str(score)
+    text = textF.render(string_score, False, 'black')
+
+    
 # ---------- Изображения ------- #
 
 # list_image = [pg.image.load('image/Песок_75х75.png'), pg.image.load('image/Вода_75х75(3).png'), pg.image.load('image/Кувшинка_большая.png'), pg.image.load('image/Кувшинка_маленькая.png')]
@@ -109,7 +128,7 @@ for y in range(0, 10):
 # ------------------------------------- #
 
 
-player = Player(0, 0)
+player = Player(0, 4)
 
 # -------- Строительство кувшинок -------- #
 
@@ -130,10 +149,9 @@ for i in range(30):
 
 death_timer = 0
 death_timeout = 90
-
-run = True
-
 death = False
+
+target = 9
 
 pg.init()
 while True:
@@ -162,12 +180,26 @@ while True:
                 if k.x == player.x and k.y == player.y:
                     death = True
                 else:
+                    free_cells = []
+                    for y in range(0, 10):
+                        for x in range(1, 9):
+                            if cells[y][x].type == 0:
+                                free_cells.append([x, y])
                     build()
 
         for l in cells:
             for n in l:
                 if player.x == n.x and player.y == n.y and n.type == 0:
                     death = True
+
+        if player.x == target:
+            score += 1
+            string_score = 'Счёт: ' + str(score)
+            text = textF.render(string_score, False, 'black')
+            if target == 9:
+                target = 0
+            elif target == 0:
+                target = 9
 
     win.fill((255, 255, 255))
     for cells_x in cells:
@@ -179,6 +211,7 @@ while True:
     if death:
         death_timer += 1
     if death_timer == death_timeout:
+        pg.quit()
         sys.exit()
 
     pg.display.update()
